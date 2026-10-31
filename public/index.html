@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نصب‌کننده و آپدیت ورکر و دیتابیس کلودفلر | Jasaz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 selection:bg-orange-500 selection:text-white">
+
+  <div class="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md">
+    
+    <!-- سربرگ با تب‌های ناوبری مستقل -->
+    <div class="p-6 border-b border-slate-800 bg-slate-900/50">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-xl font-bold text-orange-400 flex items-center gap-2">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/></svg>
+          جعبه ابزار ابری Jasaz
+        </h1>
+        <a href="https://github.com/itsyebekhe/jasaz" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg transition">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>jasaz</span>
+        </a>
+      </div>
+
+      <!-- تب‌بار ناوبری اصلی ۳ زبانه -->
+      <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 border border-slate-800 rounded-xl">
+        <button type="button" id="tab-btn-deploy" onclick="switchAppTab('deploy')" class="py-2 px-2.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 bg-orange-500 text-white shadow">
+          <span>🚀</span>
+          <span>ورکر (Jasaz)</span>
+        </button>
+        <button type="button" id="tab-btn-sub" onclick="switchAppTab('sub')" class="py-2 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1">
+          <span>⚡</span>
+          <span>ساب (ECH)</span>
+        </button>
+        <button type="button" id="tab-btn-ai" onclick="switchAppTab('ai')" class="py-2 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1">
+          <span>🧠</span>
+          <span>استخراج با AI</span>
+        </button>
+      </div>
+
+      <!-- استپر مربوط به تب استقرار -->
+      <div id="deploy-stepper-container" class="mt-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-slate-400">پیشرفت فرآیند استقرار:</span>
+          <span id="stepBadge" class="text-xs bg-orange-500/10 text-orange-400 border border-orange-500/20 px-3 py-1 rounded-full font-semibold">مرحله ۱ از ۴</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+          <div id="bar-1" class="h-1.5 rounded-full bg-orange-500 transition-all duration-300"></div>
+          <div id="bar-2" class="h-1.5 rounded-full bg-slate-800 transition-all duration-300"></div>
+          <div id="bar-3" class="h-1.5 rounded-full bg-slate-800 transition-all duration-300"></div>
+          <div id="bar-4" class="h-1.5 rounded-full bg-slate-800 transition-all duration-300"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- فرم مرحله به مرحله -->
+    <form id="wizardForm" class="p-6 space-y-6">
+
+      <!-- مرحله ۱ -->
+      <div id="step-1" class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-md font-semibold text-slate-200">گام ۱: مشخصات حساب و توکن کلودفلر</h2>
+          <button type="button" id="clearStorageBtn" onclick="clearStoredCredentials()" class="hidden text-xs text-red-400 hover:text-red-300 transition">
+            پاک کردن اطلاعات ذخیره شده
+          </button>
+        </div>
+        
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Account ID کلودفلر *</label>
+          <input type="text" id="accountId" dir="ltr" required placeholder="شناسه ۳۲ حرفی اکانت شما" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+          <div class="mt-2 bg-slate-950/70 border border-slate-800/80 rounded-lg p-2.5 text-[11px] text-slate-400 leading-relaxed">
+            <span class="text-orange-400 font-semibold">نحوه پیدا کردن Account ID:</span>
+            در پنل کلودفلر وارد بخش <span class="text-slate-200">Workers & Pages</span> شوید و در آدرس بار مرورگر، مقدار بین آدرس را کپی کنید:
+            <div dir="ltr" class="mt-1 p-1 bg-slate-900 border border-slate-800 rounded text-slate-300 text-center font-mono select-all">
+              https://dash.cloudflare.com/<span class="text-orange-400 font-bold">[account-id]</span>/workers-and-pages
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-xs font-medium text-slate-400">API Token کلودفلر *</label>
+            <a href="https://dash.cloudflare.com/profile/api-tokens?permissionGroupKeys=%5B%7B%22key%22%3A%22workers_scripts%22%2C%22type%22%3A%22edit%22%7D%2C%7B%22key%22%3A%22d1%22%2C%22type%22%3A%22edit%22%7D%2C%7B%22key%22%3A%22workers_kv_storage%22%2C%22type%22%3A%22edit%22%7D%2C%7B%22key%22%3A%22account_settings%22%2C%22type%22%3A%22read%22%7D%2C%7B%22key%22%3A%22account_analytics%22%2C%22type%22%3A%22read%22%7D%5D&accountId=*&zoneId=all&name=Jasaz%20Deployer" target="_blank" rel="noopener noreferrer" class="text-xs text-orange-400 hover:text-orange-300 flex items-center gap-1 underline font-medium">
+              <span>ساخت خودکار توکن API</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+          <input type="password" id="apiToken" dir="ltr" required placeholder="توکن با دسترسی Workers و D1" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+        </div>
+
+        <!-- تیک ذخیره انکود شده در مرورگر -->
+        <div class="pt-1">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="saveCredentials" class="w-4 h-4 rounded bg-slate-950 border-slate-800 text-orange-500 focus:ring-0 cursor-pointer" checked />
+            <span class="text-xs text-slate-400">ذخیره امن و انکود شده اطلاعات در مرورگر برای دفعات بعد</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- مرحله ۲ -->
+      <div id="step-2" class="space-y-4 hidden">
+        <h2 class="text-md font-semibold text-slate-200">گام ۲: تنظیمات سورس و نام ورکر</h2>
+
+        <!-- انتخاب الگوی آماده (Preset Selector) -->
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-2 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+            <span>الگوی آماده پروژه (انتخاب سریع تنظیمات):</span>
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button type="button" onclick="selectPreset('nahan')" id="btn-preset-nahan" class="p-2.5 rounded-xl border border-orange-500 bg-orange-500/10 transition text-center flex flex-col items-center justify-center gap-1 cursor-pointer">
+              <span class="text-base">🛡️</span>
+              <span class="text-xs font-bold text-orange-400">نهان (Nahan)</span>
+              <span class="text-[9px] text-slate-500">IOT_DB</span>
+            </button>
+            <button type="button" onclick="selectPreset('nahanmini')" id="btn-preset-nahanmini" class="p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-orange-500/60 transition text-center flex flex-col items-center justify-center gap-1 cursor-pointer">
+              <span class="text-base">🌿</span>
+              <span class="text-xs font-bold text-slate-200">نهان‌مینی (Mini)</span>
+              <span class="text-[9px] text-slate-500">DB</span>
+            </button>
+            <button type="button" onclick="selectPreset('zeus')" id="btn-preset-zeus" class="p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-orange-500/60 transition text-center flex flex-col items-center justify-center gap-1 cursor-pointer">
+              <span class="text-base">⚡</span>
+              <span class="text-xs font-bold text-slate-200">زئوس (Zeus)</span>
+              <span class="text-[9px] text-slate-500">DB</span>
+            </button>
+            <button type="button" onclick="selectPreset('custom')" id="btn-preset-custom" class="p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-orange-500/60 transition text-center flex flex-col items-center justify-center gap-1 cursor-pointer">
+              <span class="text-base">🛠️</span>
+              <span class="text-xs font-bold text-slate-200">سفارشی</span>
+              <span class="text-[9px] text-slate-500">لینک دلخواه</span>
+            </button>
+          </div>
+        </div>
+        
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-xs font-medium text-slate-400">نام ورکر (Worker Name) *</label>
+            <button type="button" onclick="generateRandomName()" class="text-xs text-orange-400 hover:underline">تولید نام رندوم</button>
+          </div>
+          <input type="text" id="workerName" dir="ltr" required placeholder="اگر نام ورکر قبلی را بزنید، آپدیت می‌شود" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+          <p class="text-[11px] text-slate-500 mt-1">💡 برای آپدیت یک ورکر موجود، کافیست نام ورکر قبلی را وارد کنید.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">آدرس مستقیم سورس کد ورکر (Direct Raw URL) *</label>
+          <input type="url" id="scriptUrl" dir="ltr" required placeholder="https://raw.githubusercontent.com/.../worker.js" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+        </div>
+
+        <!-- سوئیچ مبهم‌سازی کد به همراه پیام قفل ناهان -->
+        <div class="pt-2">
+          <label id="obfuscationLabel" class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+            <div class="flex flex-col ml-3">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-slate-200">مبهم‌سازی سورس کد (Code Obfuscator)</span>
+                <span id="nahanObfBadge" class="hidden text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-sans font-medium">سورس کد نهان از پیش مبهم‌سازی شده است</span>
+              </div>
+              <span id="obfSubtext" class="text-[11px] text-slate-500 mt-0.5">رمزنگاری رشته‌ها با XOR/Base64 برای جلوگیری از خوانده‌شدن سورس کد</span>
+            </div>
+            <div class="relative shrink-0 flex items-center">
+              <input type="checkbox" id="enableObfuscation" class="sr-only peer" checked>
+              <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:bg-orange-500 peer-disabled:opacity-40 peer-disabled:cursor-not-allowed transition-colors after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:-translate-x-5"></div>
+            </div>
+          </label>
+        </div>
+
+        <!-- سوئیچ حذف و ساخت مجدد از ابتدا -->
+        <div class="pt-1">
+          <label class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+            <div class="flex flex-col ml-3">
+              <span class="text-sm font-medium text-slate-200">حذف و بازسازی مجدد ورکر (Clean Rebuild)</span>
+              <span class="text-[11px] text-slate-500">در صورت وجود ورکر با همین نام، ابتدا آن را حذف و سپس از صفر ایجاد می‌کند</span>
+            </div>
+            <div class="relative shrink-0 flex items-center">
+              <input type="checkbox" id="recreateWorker" class="sr-only peer">
+              <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:bg-orange-500 transition-colors after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:-translate-x-5"></div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- مرحله ۳ -->
+      <div id="step-3" class="space-y-4 hidden">
+        <h2 class="text-md font-semibold text-slate-200">گام ۳: ذخیره‌سازی داده (D1 و KV - اختیاری)</h2>
+        
+        <!-- سوئیچ D1 -->
+        <label class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+          <span class="text-sm font-medium text-slate-300 ml-3">اتصال پایگاه‌داده ابری D1</span>
+          <div class="relative shrink-0 flex items-center">
+            <input type="checkbox" id="enableD1" class="sr-only peer" onchange="toggleD1Fields()">
+            <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:bg-orange-500 transition-colors after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:-translate-x-5"></div>
+          </div>
+        </label>
+
+        <div id="d1Fields" class="space-y-4 hidden pt-2">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-medium text-slate-400">نام دیتابیس D1 *</label>
+              <button type="button" onclick="generateRandomD1Name()" class="text-xs text-orange-400 hover:underline">تولید نام رندوم</button>
+            </div>
+            <input type="text" id="d1Name" dir="ltr" placeholder="اگر دیتابیس وجود داشته باشد به آن متصل می‌شود" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">نام متغیر بایندینگ D1 در کد *</label>
+            <input type="text" id="bindingName" dir="ltr" value="DB" placeholder="مثال: DB یا IOT_DB" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+          </div>
+        </div>
+
+        <!-- سوئیچ KV -->
+        <label class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+          <span class="text-sm font-medium text-slate-300 ml-3">اتصال حافظه کلید-مقدار (KV Namespace)</span>
+          <div class="relative shrink-0 flex items-center">
+            <input type="checkbox" id="enableKV" class="sr-only peer" onchange="toggleKVFields()">
+            <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:bg-orange-500 transition-colors after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:-translate-x-5"></div>
+          </div>
+        </label>
+
+        <div id="kvFields" class="space-y-4 hidden pt-2">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-medium text-slate-400">نام KV Namespace *</label>
+              <button type="button" onclick="generateRandomKVName()" class="text-xs text-orange-400 hover:underline">تولید نام رندوم</button>
+            </div>
+            <input type="text" id="kvName" dir="ltr" placeholder="نام فضای ذخیره‌سازی KV" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">نام متغیر بایندینگ KV در کد (KV Binding Name) *</label>
+            <input type="text" id="kvBindingName" dir="ltr" value="KV" placeholder="مثال: KV یا MY_KV" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-orange-500 focus:outline-none text-left" />
+          </div>
+        </div>
+      </div>
+
+      <!-- مرحله ۴ -->
+      <div id="step-4" class="space-y-4 hidden">
+        <h2 class="text-md font-semibold text-slate-200">گام ۴: تایید و استقرار نهایی</h2>
+        
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 text-sm text-slate-300">
+          <div class="flex justify-between py-1 border-b border-slate-900">
+            <span class="text-slate-500">نام ورکر:</span>
+            <span id="reviewWorkerName" class="font-mono text-orange-400">-</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-900">
+            <span class="text-slate-500">وضعیت مبهم‌سازی (Obfuscation):</span>
+            <span id="reviewObfuscation" class="font-mono text-slate-300">-</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-900">
+            <span class="text-slate-500">نحوه استقرار ورکر:</span>
+            <span id="reviewRecreate" class="font-mono text-slate-300">-</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-900">
+            <span class="text-slate-500">دیتابیس D1:</span>
+            <span id="reviewD1Status" class="font-mono text-slate-300">غیرفعال</span>
+          </div>
+          <div class="flex justify-between py-1">
+            <span class="text-slate-500">دامنه پیش‌فرض:</span>
+            <span class="font-mono text-slate-300">فعال‌سازی روی workers.dev</span>
+          </div>
+        </div>
+
+        <div id="output" class="hidden p-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed"></div>
+      </div>
+
+      <!-- دکمه‌ها -->
+      <div class="flex justify-between gap-3 pt-4 border-t border-slate-800">
+        <button type="button" id="prevBtn" onclick="prevStep()" class="hidden px-5 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 text-sm font-medium hover:bg-slate-700 transition">
+          مرحله قبل
+        </button>
+        <div class="mr-auto"></div>
+        <button type="button" id="nextBtn" onclick="nextStep()" class="px-6 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition shadow-lg shadow-orange-500/20">
+          مرحله بعد
+        </button>
+        <button type="submit" id="submitBtn" class="hidden px-6 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600 transition shadow-lg shadow-orange-500/20">
+          شروع استقرار / به‌روزرسانی
+        </button>
+      </div>
+
+    </form>
+
+    <!-- محتوای مستقل تب بهینه‌ساز ساب‌لینک -->
+    <div id="tab-content-sub" class="p-6 space-y-4 hidden">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
+            <span>⚡</span>
+            <span>بهینه‌ساز آنلاین ساب‌لینک (Dynamic Sub Optimizer)</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            تزریق خودکار Fragment، ساختارهای Cipher Suites و ECH بدون تغییر دستی کانفیگ‌ها
+          </p>
+        </div>
+        <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full">/api/sub</span>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">آدرس ساب‌لینک اصلی (Direct Sub URL) *</label>
+          <input type="url" id="optSubInput" dir="ltr" placeholder="https://example.com/sub/token..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 focus:border-emerald-500 focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">آدرس / کلین IP جایگزین (اختیاری)</label>
+            <input type="text" id="optHostInput" dir="ltr" placeholder="IP یا دامنه کلین" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 focus:border-emerald-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Fingerprint (uTLS)</label>
+            <select id="optFpSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 focus:border-emerald-500 focus:outline-none">
+              <option value="">پیش‌فرض کانفیگ (دست نزن)</option>
+              <option value="chrome">chrome</option>
+              <option value="firefox">firefox</option>
+              <option value="safari">safari</option>
+              <option value="edge">edge</option>
+              <option value="random">random</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <label class="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+            <span class="text-xs font-medium text-slate-300">افزودن Fragment و Cipher Suites (دور زدن SNI Filtering)</span>
+            <input type="checkbox" id="optFragmentCheck" checked class="w-4 h-4 rounded bg-slate-900 border-slate-800 text-emerald-500 focus:ring-0 cursor-pointer">
+          </label>
+          <label class="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
+            <span class="text-xs font-medium text-slate-300">تولید نسخه با رمزنگاری کلاینت‌هلو (ECH) چندگانه</span>
+            <input type="checkbox" id="optEchCheck" class="w-4 h-4 rounded bg-slate-900 border-slate-800 text-emerald-500 focus:ring-0 cursor-pointer">
+          </label>
+        </div>
+
+        <!-- آکاردئون تنظیمات پیشرفته مخصوص کاربران حرفه‌ای -->
+        <div class="border border-slate-800/80 rounded-xl overflow-hidden bg-slate-950/60">
+          <button type="button" onclick="toggleAdvancedOptParams()" class="w-full p-3 flex items-center justify-between text-xs font-semibold text-slate-300 hover:text-white transition bg-slate-950">
+            <span class="flex items-center gap-1.5">
+              <span>⚙️</span>
+              <span>تنظیمات پیشرفته حرفه‌ای (Custom Fragment, CS, ECH, Template)</span>
+            </span>
+            <svg id="advOptArrow" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          
+          <div id="advOptFields" class="hidden p-3.5 space-y-3 border-t border-slate-800 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">Cipher Suites (<code>cs</code>):</label>
+              <textarea id="optCsInput" rows="2" dir="ltr" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-[11px] font-mono text-slate-300 focus:border-emerald-500 focus:outline-none"></textarea>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-slate-400">FinalMask / Fragment JSON (<code>fm</code>):</label>
+                <span id="fmValidationMsg" class="text-[10px] text-emerald-400">JSON معتبر ✓</span>
+              </div>
+              <textarea id="optFmInput" rows="3" dir="ltr" oninput="validateCustomFm()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-[11px] font-mono text-slate-300 focus:border-emerald-500 focus:outline-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">لیست سرورهای ECH (هر خط یک ECH):</label>
+              <textarea id="optEchListInput" rows="2" dir="ltr" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-[11px] font-mono text-slate-300 focus:border-emerald-500 focus:outline-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">الگوی نام‌گذاری کانفیگ‌ها (Suffix Template):</label>
+              <input type="text" id="optSuffixInput" dir="ltr" value=" ECH {ip}" placeholder=" ECH {ip}" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-[11px] font-mono text-slate-300 focus:border-emerald-500 focus:outline-none" />
+              <p class="text-[10px] text-slate-500 mt-1">پلیس‌هولدرها: <code>{name}</code> · <code>{ip}</code> · <code>{domain}</code> · <code>{type}</code></p>
+            </div>
+
+            <div class="pt-1 flex justify-end">
+              <button type="button" onclick="resetAdvancedOptDefaults()" class="text-[11px] text-amber-400 hover:underline">
+                بازنشانی مقادیر پیش‌فرض
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" onclick="generateAdvancedSubLink()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold py-3 rounded-xl transition shadow-lg shadow-emerald-500/10">
+          تولید ساب‌لینک بهینه‌شده اختصاصی 🚀
+        </button>
+      </div>
+
+      <div id="optSubResult" class="hidden pt-3 border-t border-slate-800/80 space-y-2">
+        <span class="text-[11px] font-semibold text-emerald-400">✅ لینک ساب‌اسکریپشن بهینه‌شده شما با موفقیت تولید شد:</span>
+        <div dir="ltr" class="flex items-center justify-between bg-slate-950 border border-emerald-600/40 rounded-xl p-2.5 gap-2">
+          <span id="optGeneratedUrl" class="text-xs font-mono text-emerald-300 truncate select-all"></span>
+          <button type="button" onclick="copyToClipboard(document.getElementById('optGeneratedUrl').innerText, this)" class="shrink-0 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition">
+            کپی آدرس
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-500 leading-relaxed">
+          💡 کافیست این آدرس را مانند یک ساب معمولی به نرم‌افزارهای V2rayNG، Streisand یا Happ اضافه کنید.
+        </p>
+      </div>
+
+      <!-- قدردانی از پروژه cf-optimizor -->
+      <div class="mt-4 p-3 bg-slate-950/60 border border-slate-800/70 rounded-xl text-center text-xs text-slate-400 flex items-center justify-center gap-1.5 flex-wrap">
+        <span>با تشکر ویژه از</span>
+        <a href="https://github.com/ArasTey/cf-optimizor" target="_blank" rel="noopener noreferrer" class="font-bold text-slate-200 hover:text-emerald-400 transition underline underline-offset-2 flex items-center gap-1">
+          <span>cf-optimizor</span>
+          <span class="text-slate-500 text-[11px]">(ArasTey)</span>
+        </a>
+        <span>برای الگوریتم بهینه‌سازی Fragment و ECH ❤️</span>
+      </div>
+    </div>
+
+    <!-- محتوای مستقل تب تحلیل هوش مصنوعی -->
+    <div id="tab-content-ai" class="p-6 space-y-4 hidden">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-purple-400 flex items-center gap-2">
+            <span>🧠</span>
+            <span>استخراج هوشمند رشته‌های پراکسی با هوش مصنوعی (Gemini)</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            آنالیز تخصصی سورس کد و استخراج تمام متغیرها و رشته‌های مرتبط با V2Ray، Xray، Sing-box و Clash
+          </p>
+        </div>
+        <span class="text-[10px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2.5 py-1 rounded-full">Gemini</span>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">آدرس مستقیم سورس کد ورکر (Raw URL) *</label>
+          <input type="url" id="aiScriptUrl" dir="ltr" placeholder="https://raw.githubusercontent.com/.../worker.js" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 focus:border-purple-500 focus:outline-none" />
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-xs font-medium text-slate-400">کلید اختصاصی Google Gemini API *</label>
+            <div class="flex items-center gap-2">
+              <button type="button" id="clearAiKeyBtn" onclick="clearStoredAiKey()" class="hidden text-[11px] text-rose-400 hover:text-rose-300 transition">
+                پاک کردن کلید
+              </button>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] text-purple-400 hover:underline flex items-center gap-1">
+                <span>دریافت کلید API از گوگل</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+          </div>
+          <input type="password" id="aiGeminiKey" dir="ltr" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 focus:border-purple-500 focus:outline-none" />
+          
+          <!-- ذخیره امن کلید هوش مصنوعی در حافظه مرورگر -->
+          <div class="pt-2">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="saveAiKeyCheck" class="w-4 h-4 rounded bg-slate-950 border-slate-800 text-purple-600 focus:ring-0 cursor-pointer" checked />
+              <span class="text-xs text-slate-400">ذخیره امن و انکود شده کلید در مرورگر برای استفاده‌های بعدی</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="button" id="aiAnalyzeBtn" onclick="runAiAnalysis()" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2">
+          <span>🔍</span>
+          <span>شروع آنالیز و استخراج رشته‌ها</span>
+        </button>
+      </div>
+
+      <div id="aiStatus" class="hidden p-3.5 rounded-xl text-xs font-mono"></div>
+
+      <!-- نتیجه مرتب و دسته‌بندی‌شده آنالیز هوش مصنوعی -->
+      <div id="aiResultContainer" class="hidden space-y-3 pt-2">
+        <!-- کارت خلاصه عملکرد -->
+        <div class="bg-slate-950 border border-purple-900/40 rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-bold text-purple-400 flex items-center justify-between">
+            <span>خلاصه کارکرد و تحلیل ساختار ورکر:</span>
+            <span class="text-[10px] text-slate-500 font-mono">AI Inspection</span>
+          </div>
+          <p id="aiSummary" class="text-xs text-slate-300 leading-relaxed" dir="auto"></p>
+        </div>
+
+        <!-- کارت‌های دسته‌بندی مقادیر استخراج‌شده (کاملاً LTR و مرتب) -->
+        <div class="grid grid-cols-1 gap-2.5 text-xs">
+          <!-- پروتکل‌ها و مسیرها -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+              <span class="text-slate-400 font-semibold flex items-center gap-1.5">
+                <span>🛡️</span>
+                <span>پروتکل‌های شناسایی‌شده:</span>
+              </span>
+              <div id="aiProtocols" dir="ltr" class="flex flex-wrap gap-1 font-mono text-left"></div>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+              <span class="text-slate-400 font-semibold flex items-center gap-1.5">
+                <span>🌐</span>
+                <span>مسیرهای روت و پنل (Paths):</span>
+              </span>
+              <div id="aiPaths" dir="ltr" class="flex flex-wrap gap-1 font-mono text-left"></div>
+            </div>
+          </div>
+
+          <!-- کلیدها، UUID و پسوردها -->
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-semibold flex items-center gap-1.5">
+                <span>🔑</span>
+                <span>کلیدها، UUID و پسوردهای پیش‌فرض:</span>
+              </span>
+              <span id="aiKeysCount" class="text-[10px] font-mono text-slate-500"></span>
+            </div>
+            <div id="aiKeys" dir="ltr" class="flex flex-wrap gap-1 font-mono text-left"></div>
+          </div>
+
+          <!-- هاست‌ها، دامنه و کلین آی‌پی‌ها -->
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-semibold flex items-center gap-1.5">
+                <span>📡</span>
+                <span>هاست‌ها، SNI و آدرس سرورها (Hosts & Clean IPs):</span>
+              </span>
+              <span id="aiHostsCount" class="text-[10px] font-mono text-slate-500"></span>
+            </div>
+            <div id="aiHosts" dir="ltr" class="flex flex-wrap gap-1 font-mono text-left max-h-36 overflow-y-auto"></div>
+          </div>
+
+          <!-- تنظیمات شبکه، Fragment و Cipher Suites -->
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+            <span class="text-slate-400 font-semibold flex items-center gap-1.5">
+              <span>⚙️</span>
+              <span>تنظیمات شبکه و ترنسپورت (Transport / Cipher):</span>
+            </span>
+            <div id="aiTransport" dir="ltr" class="flex flex-wrap gap-1 font-mono text-left max-h-28 overflow-y-auto"></div>
+          </div>
+        </div>
+
+        <!-- باکس مستقل و اختصاصی all_proxy_related_strings -->
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <span>📦</span>
+              <span>تمام رشته‌های مرتبط با پراکسی (all_proxy_related_strings):</span>
+            </span>
+            <div class="flex items-center gap-2">
+              <span id="aiAllStringsCount" class="text-[10px] font-mono text-slate-500"></span>
+              <button type="button" onclick="copyOnlyAllProxyStrings()" class="text-[11px] bg-slate-900 hover:bg-slate-800 text-purple-300 border border-purple-900/60 px-2.5 py-1 rounded-lg transition flex items-center gap-1">
+                <span>📋</span>
+                <span>کپی این لیست</span>
+              </button>
+            </div>
+          </div>
+          <div id="aiAllStringsTags" dir="ltr" class="flex flex-wrap gap-1 font-mono text-left max-h-48 overflow-y-auto p-1 bg-slate-900/40 rounded-lg border border-slate-900"></div>
+        </div>
+
+        <!-- ژنراتور پرامپت تعویض کامل رشته‌ها (Prompt Generator) -->
+        <div class="bg-slate-950 border border-purple-600/40 rounded-xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-xs font-bold text-purple-400">
+              <span>🪄</span>
+              <span>پرامپت آماده هوش مصنوعی برای جایگزینی کامل رشته‌ها (Replacement Prompt):</span>
+            </div>
+            <button type="button" onclick="copyGeneratedPrompt()" id="copyPromptBtn" class="text-xs bg-purple-600 hover:bg-purple-700 text-white font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow">
+              <span>📋</span>
+              <span>کپی پرامپت آماده</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            این پرامپت به صورت خودکار با لیست رشته‌های استخراج‌شده ساخته شده است. کافیست آن را کپی کرده و به همراه سورس ورکر خود به ChatGPT یا Claude بفرستید تا تمام مقادیر لو رفته را ری‌برند و استتار کند:
+          </p>
+          <textarea id="aiGeneratedPrompt" rows="6" dir="ltr" readonly class="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-[11px] font-mono text-slate-300 leading-relaxed text-left select-all focus:outline-none"></textarea>
+        </div>
+
+        <!-- تمام خروجی ساختاریافته (Complete JSON Output) -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-semibold text-slate-400">خروجی کامل آنالیز (Full Raw JSON):</span>
+            <button type="button" onclick="copyAllAiStrings()" class="text-xs text-slate-400 hover:text-white transition">کپی کل JSON</button>
+          </div>
+          <textarea id="aiRawJsonOutput" rows="5" dir="ltr" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-[11px] font-mono text-emerald-300/80 leading-relaxed text-left select-all focus:outline-none"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ابزارهای کمکی و کاربردی -->
+    <div class="p-4 mx-6 mb-4 bg-slate-950/80 border border-slate-800 rounded-xl space-y-2.5">
+      <div class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+        <span>🧰</span>
+        <span>سایر ابزارهای کاربردی و مکمل:</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" dir="rtl">
+        <a href="https://t.me/itsZetaBot" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-orange-500/50 hover:bg-slate-900 transition group">
+          <div class="flex flex-col">
+            <span class="font-semibold text-slate-200 group-hover:text-orange-400 transition">ربات Zeta (@itsZetaBot)</span>
+            <span class="text-[10px] text-slate-500 mt-0.5">اسکنر کلین آی‌پی، DNS و Random SNI</span>
+          </div>
+          <span class="text-slate-500 group-hover:text-orange-400 transition text-sm">↗</span>
+        </a>
+        <a href="https://t.me/nahanproxyipbot" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-orange-500/50 hover:bg-slate-900 transition group">
+          <div class="flex flex-col">
+            <span class="font-semibold text-slate-200 group-hover:text-orange-400 transition">پروکسی آی‌پی (@nahanproxyipbot)</span>
+            <span class="text-[10px] text-slate-500 mt-0.5">سریع‌ترین Proxy IPهای رله جهانی</span>
+          </div>
+          <span class="text-slate-500 group-hover:text-orange-400 transition text-sm">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- فوتر -->
+    <div class="px-6 py-3.5 border-t border-slate-800/80 bg-slate-950/40 text-center text-xs text-slate-500 flex items-center justify-center gap-1.5" dir="ltr">
+      <span>Created with</span>
+      <span class="text-red-500 animate-pulse">❤️</span>
+      <span>by</span>
+      <a href="https://github.com/itsyebekhe" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-400 hover:text-orange-400 transition underline underline-offset-2">yebekhe</a>
+    </div>
+  </div>
+
+  <script>
+    // --- توابع کش امنیتی ---
+    const STORAGE_KEY = 0x3b;
+
+    function encodeStorage(str) {
+      if (!str) return '';
+      const bytes = new TextEncoder().encode(str);
+      const xor = new Uint8Array(bytes.length);
+      for (let i = 0; i < bytes.length; i++) {
+        xor[i] = bytes[i] ^ (STORAGE_KEY ^ (i % 7));
+      }
+      let binary = '';
+      for (let i = 0; i < xor.byteLength; i++) {
+        binary += String.fromCharCode(xor[i]);
+      }
+      return btoa(binary);
+    }
+
+    function decodeStorage(b64) {
+      if (!b64) return '';
+      try {
+        const binary = atob(b64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i) ^ (STORAGE_KEY ^ (i % 7));
+        }
+        return new TextDecoder().decode(bytes);
+      } catch {
+        return '';
+      }
+    }
+
+    // --- الگوهای آماده (Presets) ---
+    const PRESETS = {
+      nahan: {
+        url: 'https://raw.githubusercontent.com/itsyebekhe/nahan/refs/heads/main/worker.encoded.js',
+        binding: 'IOT_DB',
+        obfuscate: false,
+        recreate: true,
+        enableD1: true,
+      },
+      nahanmini: {
+        url: 'https://raw.githubusercontent.com/itsyebekhe/NahanMini/main/src/worker.js',
+        binding: 'DB',
+        obfuscate: true,
+        recreate: true,
+        enableD1: true,
+      },
+      zeus: {
+        url: 'https://raw.githubusercontent.com/panel-zeus/Z-E-U-S/refs/heads/main/Source.js',
+        binding: 'DB',
+        obfuscate: true,
+        recreate: true,
+        enableD1: true,
+      },
+      custom: {
+        url: '',
+        binding: 'DB',
+        obfuscate: true,
+        recreate: false,
+        enableD1: false,
+      }
+    };
+
+    function selectPreset(type) {
+      const p = PRESETS[type];
+      if (!p) return;
+
+      // هایلایت دکمه‌ها
+      ['nahan', 'nahanmini', 'zeus', 'custom'].forEach(t => {
+        const btn = document.getElementById(`btn-preset-${t}`);
+        if (!btn) return;
+        if (t === type) {
+          btn.className = 'p-2.5 rounded-xl border border-orange-500 bg-orange-500/10 transition text-center flex flex-col items-center justify-center gap-1 cursor-pointer';
+          const titleSpan = btn.querySelector('.text-xs');
+          if (titleSpan) titleSpan.className = 'text-xs font-bold text-orange-400';
+        } else {
+          btn.className = 'p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-orange-500/60 transition text-center flex flex-col items-center justify-center gap-1 cursor-pointer';
+          const titleSpan = btn.querySelector('.text-xs');
+          if (titleSpan) titleSpan.className = 'text-xs font-bold text-slate-200';
+        }
+      });
+
+      // بارگذاری کامل تنظیمات الگو
+      document.getElementById('scriptUrl').value = p.url;
+      document.getElementById('bindingName').value = p.binding;
+      document.getElementById('recreateWorker').checked = p.recreate;
+      document.getElementById('enableD1').checked = p.enableD1;
+
+      // قفل کردن مبهم‌سازی برای ناهان (چون از پیش انکود شده است)
+      const obfCheckbox = document.getElementById('enableObfuscation');
+      const nahanBadge = document.getElementById('nahanObfBadge');
+      const obfSubtext = document.getElementById('obfSubtext');
+      const obfLabel = document.getElementById('obfuscationLabel');
+
+      if (type === 'nahan') {
+        obfCheckbox.checked = false;
+        obfCheckbox.disabled = true;
+        nahanBadge.classList.remove('hidden');
+        obfSubtext.innerText = 'این سورس کد به صورت رسمی انکود شده است و نیازی به مبهم‌سازی مجدد ندارد.';
+        obfLabel.classList.add('opacity-80', 'cursor-not-allowed');
+      } else {
+        obfCheckbox.disabled = false;
+        obfCheckbox.checked = p.obfuscate;
+        nahanBadge.classList.add('hidden');
+        obfSubtext.innerText = 'رمزنگاری رشته‌ها با XOR/Base64 برای جلوگیری از خوانده‌شدن سورس کد';
+        obfLabel.classList.remove('opacity-80', 'cursor-not-allowed');
+      }
+      
+      // اگر روی سفارشی کلیک شد، نام دیتابیس خالی شود
+      if (type === 'custom') {
+        document.getElementById('d1Name').value = '';
+      }
+      
+      toggleD1Fields();
+    }
+
+    // --- بارگذاری اولیه اطلاعات ---
+    window.addEventListener('DOMContentLoaded', () => {
+      // ۱. ابتدا فرم ریست شود تا کش مرورگر تداخل ایجاد نکند
+      document.getElementById('wizardForm').reset();
+
+      // ۲. انتخاب پیش‌فرض ناهان (اکنون مطمئنیم که فیلدها پر می‌شوند)
+      selectPreset('nahan');
+
+      // ۳. بازیابی اطلاعات ذخیره‌شده حساب کلودفلر و هوش مصنوعی
+      const savedAcc = localStorage.getItem('_cf_acc_enc');
+      const savedTok = localStorage.getItem('_cf_tok_enc');
+      const savedAiKey = localStorage.getItem('_gemini_key_enc');
+
+      if (savedAcc && savedTok) {
+        document.getElementById('accountId').value = decodeStorage(savedAcc);
+        document.getElementById('apiToken').value = decodeStorage(savedTok);
+        document.getElementById('clearStorageBtn').classList.remove('hidden');
+      }
+
+      if (savedAiKey) {
+        document.getElementById('aiGeminiKey').value = decodeStorage(savedAiKey);
+        const clearBtn = document.getElementById('clearAiKeyBtn');
+        if (clearBtn) clearBtn.classList.remove('hidden');
+      }
+
+      // ۴. خواندن پارامترها از لینک و اعمال آن‌ها
+      const urlParams = new URLSearchParams(window.location.search);
+      const getParam = (...keys) => {
+        for (const k of keys) {
+          if (urlParams.has(k)) return urlParams.get(k);
+        }
+        return null;
+      };
+
+      const pPreset = getParam('preset');
+      if (pPreset && PRESETS[pPreset.toLowerCase()]) {
+        selectPreset(pPreset.toLowerCase());
+      }
+
+      const pAcc = getParam('account_id', 'accountId');
+      const pTok = getParam('token', 'apiToken', 'apiKey');
+      const pWorker = getParam('worker_name', 'workerName', 'name');
+      const pUrl = getParam('script_url', 'scriptUrl', 'url');
+      const pD1 = getParam('d1_name', 'd1Name', 'd1');
+      const pBinding = getParam('binding_name', 'bindingName', 'binding');
+      const pObf = getParam('obfuscate', 'enableObfuscation');
+      const pRecreate = getParam('recreate', 'rebuild', 'clean');
+
+      if (pAcc) document.getElementById('accountId').value = pAcc;
+      if (pTok) document.getElementById('apiToken').value = pTok;
+      if (pWorker) document.getElementById('workerName').value = pWorker;
+      
+      if (pUrl) {
+        document.getElementById('scriptUrl').value = pUrl;
+      }
+
+      if (pD1 !== null || pBinding !== null) {
+        document.getElementById('enableD1').checked = true;
+        toggleD1Fields();
+        if (pD1) document.getElementById('d1Name').value = pD1;
+        if (pBinding) document.getElementById('bindingName').value = pBinding;
+      }
+
+      if (pObf !== null) {
+        document.getElementById('enableObfuscation').checked = (pObf === 'true' || pObf === '1');
+      }
+
+      if (pRecreate !== null) {
+        document.getElementById('recreateWorker').checked = (pRecreate === 'true' || pRecreate === '1');
+      }
+    });
+
+    function saveOrClearCredentials() {
+      const shouldSave = document.getElementById('saveCredentials').checked;
+      const acc = document.getElementById('accountId').value.trim();
+      const tok = document.getElementById('apiToken').value.trim();
+
+      if (shouldSave && acc && tok) {
+        localStorage.setItem('_cf_acc_enc', encodeStorage(acc));
+        localStorage.setItem('_cf_tok_enc', encodeStorage(tok));
+        document.getElementById('clearStorageBtn').classList.remove('hidden');
+      } else if (!shouldSave) {
+        clearStoredCredentials();
+      }
+    }
+
+    function clearStoredCredentials() {
+      localStorage.removeItem('_cf_acc_enc');
+      localStorage.removeItem('_cf_tok_enc');
+      document.getElementById('accountId').value = '';
+      document.getElementById('apiToken').value = '';
+      document.getElementById('clearStorageBtn').classList.add('hidden');
+    }
+
+    function generateRandomName() {
+      const words = ['fast', 'turbo', 'sky', 'pixel', 'smart', 'flow', 'edge', 'shield'];
+      const pick = () => words[Math.floor(Math.random() * words.length)];
+      const num = Math.floor(Math.random() * 899) + 100;
+      document.getElementById('workerName').value = `${pick()}-${pick()}-${num}`;
+    }
+
+    function generateRandomD1Name() {
+      const prefixes = ['db', 'data', 'store', 'cloud', 'vault', 'jasaz'];
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      const num = Math.floor(Math.random() * 899) + 100;
+      document.getElementById('d1Name').value = `${pick(prefixes)}-${num}`;
+    }
+
+    function generateRandomKVName() {
+      const prefixes = ['kv', 'cache', 'store', 'session'];
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      const num = Math.floor(Math.random() * 899) + 100;
+      document.getElementById('kvName').value = `${pick(prefixes)}-${num}`;
+    }
+
+    function toggleD1Fields() {
+      const enabled = document.getElementById('enableD1').checked;
+      document.getElementById('d1Fields').classList.toggle('hidden', !enabled);
+      document.getElementById('d1Name').required = enabled;
+      document.getElementById('bindingName').required = enabled;
+    }
+
+    function toggleKVFields() {
+      const enabled = document.getElementById('enableKV').checked;
+      document.getElementById('kvFields').classList.toggle('hidden', !enabled);
+      document.getElementById('kvName').required = enabled;
+      document.getElementById('kvBindingName').required = enabled;
+    }
+
+    function copyToClipboard(text, btnElement) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = 'کپی شد! ✓';
+        btnElement.classList.add('text-emerald-400');
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.classList.remove('text-emerald-400');
+        }, 2000);
+      });
+    }
+
+    function switchAppTab(tab) {
+      const wizardForm = document.getElementById('wizardForm');
+      const subTabContent = document.getElementById('tab-content-sub');
+      const aiTabContent = document.getElementById('tab-content-ai');
+      const stepperContainer = document.getElementById('deploy-stepper-container');
+
+      const btnDeploy = document.getElementById('tab-btn-deploy');
+      const btnSub = document.getElementById('tab-btn-sub');
+      const btnAi = document.getElementById('tab-btn-ai');
+
+      // ریست وضعیت نمایش تمام تب‌ها
+      wizardForm.classList.add('hidden');
+      subTabContent.classList.add('hidden');
+      aiTabContent.classList.add('hidden');
+      stepperContainer.classList.add('hidden');
+
+      btnDeploy.className = 'py-2 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1';
+      btnSub.className = 'py-2 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1';
+      btnAi.className = 'py-2 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1';
+
+      if (tab === 'deploy') {
+        wizardForm.classList.remove('hidden');
+        stepperContainer.classList.remove('hidden');
+        btnDeploy.className = 'py-2 px-2.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 bg-orange-500 text-white shadow';
+      } else if (tab === 'sub') {
+        subTabContent.classList.remove('hidden');
+        btnSub.className = 'py-2 px-2.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 bg-emerald-500 text-slate-950 shadow';
+      } else if (tab === 'ai') {
+        aiTabContent.classList.remove('hidden');
+        btnAi.className = 'py-2 px-2.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 bg-purple-600 text-white shadow';
+        // مقداردهی اولیه سورس از فیلد دیپلوی در صورت خالی بودن
+        const curScript = document.getElementById('scriptUrl').value.trim();
+        const aiUrlInput = document.getElementById('aiScriptUrl');
+        if (!aiUrlInput.value && curScript) aiUrlInput.value = curScript;
+      }
+    }
+
+    function saveOrClearAiKey() {
+      const shouldSave = document.getElementById('saveAiKeyCheck').checked;
+      const key = document.getElementById('aiGeminiKey').value.trim();
+      const clearBtn = document.getElementById('clearAiKeyBtn');
+
+      if (shouldSave && key) {
+        localStorage.setItem('_gemini_key_enc', encodeStorage(key));
+        if (clearBtn) clearBtn.classList.remove('hidden');
+      } else if (!shouldSave) {
+        clearStoredAiKey();
+      }
+    }
+
+    function clearStoredAiKey() {
+      localStorage.removeItem('_gemini_key_enc');
+      document.getElementById('aiGeminiKey').value = '';
+      const clearBtn = document.getElementById('clearAiKeyBtn');
+      if (clearBtn) clearBtn.classList.add('hidden');
+    }
+
+    async function runAiAnalysis() {
+      const scriptUrl = document.getElementById('aiScriptUrl').value.trim();
+      const geminiApiKey = document.getElementById('aiGeminiKey').value.trim();
+      const statusEl = document.getElementById('aiStatus');
+      const btn = document.getElementById('aiAnalyzeBtn');
+      const resultContainer = document.getElementById('aiResultContainer');
+
+      if (!scriptUrl || !geminiApiKey) {
+        alert('لطفاً هم آدرس سورس کد ورکر و هم کلید Gemini API را وارد کنید.');
+        return;
+      }
+
+      saveOrClearAiKey();
+
+      statusEl.className = 'p-3.5 rounded-xl text-xs font-mono bg-slate-950 border border-slate-800 text-slate-300';
+      statusEl.innerText = 'در حال دانلود سورس ورکر و پردازش عمیق توسط Gemini ... شکیبا باشید.';
+      statusEl.classList.remove('hidden');
+      resultContainer.classList.add('hidden');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-50');
+
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scriptUrl, geminiApiKey }),
+        });
+
+        const resData = await response.json();
+
+        if (!response.ok || !resData.success) {
+          throw new Error(resData.error || 'خطا در تحلیل هوش مصنوعی');
+        }
+
+        const data = resData.analysis;
+        statusEl.className = 'p-3 rounded-xl text-xs font-sans bg-purple-950/60 border border-purple-800 text-purple-200';
+        statusEl.innerText = `✅ آنالیز با موفقیت تکمیل شد! (${resData.codeSize.toLocaleString()} بایت کد پردازش شد)`;
+
+        document.getElementById('aiSummary').innerText = data.summary || 'توضیحی ثبت نشده است.';
+
+        const renderBadges = (items, containerId, countId, bgClass) => {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          container.innerHTML = '';
+          
+          if (countId) {
+            const countEl = document.getElementById(countId);
+            if (countEl) countEl.innerText = items ? `${items.length} مورد` : '۰';
+          }
+
+          if (!items || items.length === 0) {
+            container.innerHTML = '<span class="text-slate-600 text-[11px] italic">No values detected</span>';
+            return;
+          }
+
+          items.forEach(item => {
+            const span = document.createElement('span');
+            span.className = `px-2 py-0.5 rounded text-[11px] select-all cursor-pointer hover:brightness-125 transition ${bgClass}`;
+            span.innerText = item;
+            span.title = 'برای کپی کلیک کنید';
+            span.onclick = () => {
+              navigator.clipboard.writeText(item);
+              const orig = span.innerText;
+              span.innerText = 'Copied!';
+              setTimeout(() => { span.innerText = orig; }, 1200);
+            };
+            container.appendChild(span);
+          });
+        };
+
+        renderBadges(data.protocols, 'aiProtocols', null, 'bg-blue-950 border border-blue-700/60 text-blue-300');
+        renderBadges(data.admin_and_sub_paths, 'aiPaths', null, 'bg-orange-950 border border-orange-700/60 text-orange-300');
+        renderBadges(data.keys_and_passwords, 'aiKeys', 'aiKeysCount', 'bg-rose-950 border border-rose-700/60 text-rose-300 font-bold');
+        renderBadges(data.hosts_and_clean_ips, 'aiHosts', 'aiHostsCount', 'bg-emerald-950 border border-emerald-700/60 text-emerald-300');
+        renderBadges(data.transport_and_network, 'aiTransport', null, 'bg-cyan-950 border border-cyan-700/60 text-cyan-300');
+        
+        // رندر باکس اختصاصی all_proxy_related_strings
+        renderBadges(data.all_proxy_related_strings, 'aiAllStringsTags', 'aiAllStringsCount', 'bg-slate-900 border border-slate-700 text-purple-300');
+
+        // تولید پرامپت مهندسی‌شده تعویض کامل رشته‌ها
+        const allStringsList = Array.isArray(data.all_proxy_related_strings) 
+          ? data.all_proxy_related_strings 
+          : [];
+
+        const generatedPromptText = `You are an expert code refactorer and software obfuscation specialist.
+I am providing you with my Cloudflare Worker proxy script along with a list of extracted proxy-related strings.
+Your task is to FULLY REPLACE, RENAME, and CAMOUFLAGE every single string from the list below in the source code.
+
+Rules:
+1. Replace proxy terminology, path names (e.g. /sub, /panel, /sync/dash), passwords, headers, protocol keywords, and variables with realistic, generic cloud services terminology (e.g. telemetry, cdn-metric, assets, healthcheck, iot-beacon).
+2. Generate fresh, realistic replacement values (e.g., new random UUIDs, new disguised path segments, randomized sub endpoints).
+3. Do NOT break the functionality or logical flow of the worker. Ensure sockets, WebSocket upgrades, and D1 database queries continue to execute seamlessly with the new mapped names.
+4. Output the complete refactored JavaScript code directly, followed by a concise mapping table showing what was replaced.
+
+Target strings to completely replace and neutralize:
+${JSON.stringify(allStringsList, null, 2)}
+
+[ATTACH YOUR WORKER SOURCE CODE BELOW THIS LINE]`;
+
+        document.getElementById('aiGeneratedPrompt').value = generatedPromptText;
+        document.getElementById('aiRawJsonOutput').value = JSON.stringify(data, null, 2);
+        resultContainer.classList.remove('hidden');
+
+      } catch (err) {
+        statusEl.className = 'p-3.5 rounded-xl text-xs font-mono bg-rose-950/60 border border-rose-800 text-rose-300';
+        statusEl.innerText = `❌ خطا در آنالیز سورس:\n${err.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50');
+      }
+    }
+
+    function copyAllAiStrings() {
+      const output = document.getElementById('aiRawJsonOutput');
+      if (!output || !output.value) return;
+      navigator.clipboard.writeText(output.value).then(() => {
+        alert('خروجی کامل JSON کپی شد!');
+      });
+    }
+
+    function copyOnlyAllProxyStrings() {
+      const tags = document.querySelectorAll('#aiAllStringsTags span');
+      const list = Array.from(tags).map(t => t.innerText);
+      if (list.length === 0) return;
+      navigator.clipboard.writeText(JSON.stringify(list, null, 2)).then(() => {
+        alert('لیست تمام رشته‌های پراکسی (all_proxy_related_strings) کپی شد!');
+      });
+    }
+
+    function copyGeneratedPrompt() {
+      const promptEl = document.getElementById('aiGeneratedPrompt');
+      const btn = document.getElementById('copyPromptBtn');
+      if (!promptEl || !promptEl.value) return;
+      navigator.clipboard.writeText(promptEl.value).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<span>✓</span><span>کپی شد!</span>';
+        setTimeout(() => { btn.innerHTML = orig; }, 1800);
+      });
+    }
+
+    const DEF_FM_STR = '{"tcp":[{"type":"fragment","settings":{"packets":"tlshello","lengths":["0","104","1"],"delays":["0"],"maxSplit":"0"}},{"type":"fragment","settings":{"packets":"1-1","lengths":["114","1"],"delays":["1"],"maxSplit":"11"}}]}';
+    const DEF_CS_STR = 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA:TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA:TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256:TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256';
+    const DEF_ECH_STR = 'cloudflare-ech.com+udp://1.1.1.1\ncloudflare-ech.com+udp://8.8.8.8';
+
+    function initAdvOptFields() {
+      const csEl = document.getElementById('optCsInput');
+      const fmEl = document.getElementById('optFmInput');
+      const echEl = document.getElementById('optEchListInput');
+      if (csEl && !csEl.value) csEl.value = DEF_CS_STR;
+      if (fmEl && !fmEl.value) fmEl.value = DEF_FM_STR;
+      if (echEl && !echEl.value) echEl.value = DEF_ECH_STR;
+    }
+    window.addEventListener('DOMContentLoaded', initAdvOptFields);
+
+    function toggleAdvancedOptParams() {
+      const el = document.getElementById('advOptFields');
+      const arrow = document.getElementById('advOptArrow');
+      const isHidden = el.classList.toggle('hidden');
+      arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    function validateCustomFm() {
+      const val = document.getElementById('optFmInput').value.trim();
+      const msg = document.getElementById('fmValidationMsg');
+      try {
+        JSON.parse(val);
+        msg.innerText = 'JSON معتبر ✓';
+        msg.className = 'text-[10px] text-emerald-400';
+        return true;
+      } catch {
+        msg.innerText = 'JSON نامعتبر ✗';
+        msg.className = 'text-[10px] text-rose-400';
+        return false;
+      }
+    }
+
+    function resetAdvancedOptDefaults() {
+      document.getElementById('optCsInput').value = DEF_CS_STR;
+      document.getElementById('optFmInput').value = DEF_FM_STR;
+      document.getElementById('optEchListInput').value = DEF_ECH_STR;
+      document.getElementById('optSuffixInput').value = ' ECH {ip}';
+      validateCustomFm();
+    }
+
+    function generateAdvancedSubLink() {
+      const subUrl = document.getElementById('optSubInput').value.trim();
+      const customHost = document.getElementById('optHostInput').value.trim();
+      const fp = document.getElementById('optFpSelect').value;
+      const fragment = document.getElementById('optFragmentCheck').checked;
+      const ech = document.getElementById('optEchCheck').checked;
+
+      const cs = document.getElementById('optCsInput').value.trim();
+      const fm = document.getElementById('optFmInput').value.trim();
+      const echListRaw = document.getElementById('optEchListInput').value.trim();
+      const suffix = document.getElementById('optSuffixInput').value.trim();
+
+      if (!subUrl) {
+        alert('لطفاً آدرس ساب‌لینک را وارد کنید.');
+        return;
+      }
+
+      if (fm && !validateCustomFm()) {
+        alert('فرمت JSON در فیلد FinalMask نامعتبر است.');
+        return;
+      }
+
+      let finalUrl = `${window.location.origin}/api/sub?url=${encodeURIComponent(subUrl)}`;
+      if (customHost) finalUrl += `&host=${encodeURIComponent(customHost)}`;
+      if (fp) finalUrl += `&fp=${encodeURIComponent(fp)}`;
+      if (!fragment) finalUrl += `&fragment=0`;
+      if (ech) finalUrl += `&ech=1`;
+
+      // اگر کاربر مقادیر پیش‌فرض را شخصی‌سازی کرده باشد، به URL اضافه می‌شوند
+      if (cs && cs !== DEF_CS_STR) finalUrl += `&cs=${encodeURIComponent(cs)}`;
+      if (fm && fm !== DEF_FM_STR) finalUrl += `&fm=${encodeURIComponent(fm)}`;
+      if (suffix && suffix !== ' ECH {ip}') finalUrl += `&suffix=${encodeURIComponent(suffix)}`;
+
+      if (echListRaw && echListRaw !== DEF_ECH_STR) {
+        const echParam = echListRaw.split(/[\r\n]+/).map(x => x.trim()).filter(Boolean).join(',');
+        finalUrl += `&ech_list=${encodeURIComponent(echParam)}`;
+      }
+
+      document.getElementById('optGeneratedUrl').innerText = finalUrl;
+      document.getElementById('optSubResult').classList.remove('hidden');
+    }
+
+    // --- مدیریت مراحل استپر ---
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    function updateStepper() {
+      document.getElementById('stepBadge').innerText = `مرحله ${currentStep} از ${totalSteps}`;
+
+      for (let i = 1; i <= totalSteps; i++) {
+        const bar = document.getElementById(`bar-${i}`);
+        if (i <= currentStep) {
+          bar.classList.remove('bg-slate-800');
+          bar.classList.add('bg-orange-500');
+        } else {
+          bar.classList.add('bg-slate-800');
+          bar.classList.remove('bg-orange-500');
+        }
+      }
+
+      for (let i = 1; i <= totalSteps; i++) {
+        document.getElementById(`step-${i}`).classList.toggle('hidden', i !== currentStep);
+      }
+
+      document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
+      document.getElementById('nextBtn').classList.toggle('hidden', currentStep === totalSteps);
+      document.getElementById('submitBtn').classList.toggle('hidden', currentStep !== totalSteps);
+
+      if (currentStep === 4) {
+        document.getElementById('reviewWorkerName').innerText = document.getElementById('workerName').value || '-';
+        document.getElementById('reviewObfuscation').innerText = document.getElementById('enableObfuscation').checked ? 'فعال (رمزگذاری با XOR)' : 'غیرفعال (کد خام)';
+        document.getElementById('reviewRecreate').innerText = document.getElementById('recreateWorker').checked ? 'نصب مجدد از صفر (Clean Rebuild)' : 'بروزرسانی مستقیم ورکر';
+        const d1Active = document.getElementById('enableD1').checked;
+        document.getElementById('reviewD1Status').innerText = d1Active 
+          ? `${document.getElementById('d1Name').value} (متغیر بایندینگ: ${document.getElementById('bindingName').value})` 
+          : 'غیرفعال';
+      }
+    }
+
+    function nextStep() {
+      if (currentStep === 1) {
+        if (!document.getElementById('accountId').checkValidity() || !document.getElementById('apiToken').checkValidity()) {
+          alert('لطفاً فیلد Account ID و API Token را تکمیل کنید.');
+          return;
+        }
+        saveOrClearCredentials();
+      } else if (currentStep === 2) {
+        if (!document.getElementById('workerName').checkValidity() || !document.getElementById('scriptUrl').checkValidity()) {
+          alert('لطفاً نام ورکر و آدرس فایل کدهای اسکریپت را وارد کنید.');
+          return;
+        }
+      } else if (currentStep === 3) {
+        if (document.getElementById('enableD1').checked) {
+          if (!document.getElementById('d1Name').value.trim() || !document.getElementById('bindingName').value.trim()) {
+            alert('لطفاً نام دیتابیس D1 و نام متغیر بایندینگ را مشخص کنید.');
+            return;
+          }
+        }
+      }
+
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateStepper();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepper();
+      }
+    }
+
+    // --- عملیات نهایی (ارسال به سرور) ---
+    document.getElementById('wizardForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      saveOrClearCredentials();
+
+      const output = document.getElementById('output');
+      const submitBtn = document.getElementById('submitBtn');
+      const prevBtn = document.getElementById('prevBtn');
+
+      output.className = 'mt-4 p-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed bg-slate-950 border border-slate-800 text-slate-300';
+      output.innerHTML = 'در حال ارتباط با بک‌اند کلودفلر، دانلود سورس و استقرار ورکر... لطفاً شکیبا باشید.';
+      output.classList.remove('hidden');
+
+      submitBtn.disabled = true;
+      prevBtn.disabled = true;
+      submitBtn.classList.add('opacity-50');
+
+      const payload = {
+        accountId: document.getElementById('accountId').value.trim(),
+        apiToken: document.getElementById('apiToken').value.trim(),
+        workerName: document.getElementById('workerName').value.trim(),
+        scriptUrl: document.getElementById('scriptUrl').value.trim(),
+        enableObfuscation: document.getElementById('enableObfuscation').checked,
+        recreateWorker: document.getElementById('recreateWorker').checked,
+        d1Name: document.getElementById('enableD1').checked ? document.getElementById('d1Name').value.trim() : null,
+        bindingName: document.getElementById('enableD1').checked ? document.getElementById('bindingName').value.trim() : null,
+        kvName: document.getElementById('enableKV').checked ? document.getElementById('kvName').value.trim() : null,
+        kvBindingName: document.getElementById('enableKV').checked ? document.getElementById('kvBindingName').value.trim() : null,
+      };
+
+      try {
+        const response = await fetch('/api/deploy', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload),
+        });
+
+        let result;
+        try {
+          result = await response.json();
+        } catch {
+          throw new Error(`پاسخ سرور در قالب JSON نبود (کد وضعیت: ${response.status})`);
+        }
+
+        if (result.success) {
+          output.className = 'mt-4 p-4 rounded-xl text-xs font-sans leading-relaxed bg-emerald-950/60 border border-emerald-700 text-emerald-200';
+          
+          // تعیین مسیر پنل بر اساس سورس کد یا متغیر بایندینگ
+          let panelUrl = result.workerUrl;
+          const currentBinding = document.getElementById('bindingName').value.trim();
+          const currentUrl = document.getElementById('scriptUrl').value.trim();
+
+          const isNahanMini = currentUrl.includes('NahanMini') || currentUrl.includes('nahanmini');
+          const isNahan = !isNahanMini && (currentBinding === 'IOT_DB' || currentUrl.includes('nahan'));
+
+          if (panelUrl) {
+            if (isNahanMini) {
+              panelUrl = panelUrl.replace(/\/+$/, '') + '/login';
+            } else if (isNahan) {
+              panelUrl = panelUrl.replace(/\/+$/, '') + '/sync/dash';
+            } else if (currentBinding === 'DB' || currentUrl.includes('zeus') || currentUrl.includes('Z-E-U-S')) {
+              panelUrl = panelUrl.replace(/\/+$/, '') + '/panel';
+            }
+          }
+
+          let html = `
+            <div class="flex items-center gap-2 text-sm font-bold text-emerald-300 mb-2">
+              <span>عملیات با موفقیت انجام شد! 🎉</span>
+            </div>
+            <div class="space-y-1.5 text-xs">
+              <div>نام ورکر: <span class="font-mono text-white font-semibold">${result.workerName}</span></div>
+              <div>وضعیت نصب: <span class="text-white">${result.recreated ? 'حذف و بازسازی مجدد از ابتدا (Clean)' : 'به‌روزرسانی مستقیم'}</span></div>
+              <div>مبهم‌سازی سورس: <span class="text-white">${result.obfuscated ? 'فعال شد' : 'غیرفعال'}</span></div>
+              ${result.d1DatabaseId ? `<div>دیتابیس D1 متصل شد (UUID): <span class="font-mono text-emerald-400">${result.d1DatabaseId}</span></div>` : '<div>دیتابیس D1: بدون دیتابیس</div>'}
+              ${isNahan ? `<div class="mt-2 p-2 bg-emerald-900/60 border border-emerald-600/50 rounded-lg text-emerald-100 font-sans">🔑 <b>رمز عبور پیش‌فرض پنل نهان:</b> <code class="bg-black/40 px-1.5 py-0.5 rounded text-orange-300 select-all font-mono">admin</code></div>` : ''}
+              ${isNahanMini ? `<div class="mt-2 p-2 bg-emerald-900/60 border border-emerald-600/50 rounded-lg text-emerald-100 font-sans">🔑 <b>رمز عبور پیش‌فرض پنل نهان‌مینی:</b> <code class="bg-black/40 px-1.5 py-0.5 rounded text-orange-300 select-all font-mono">admin123</code></div>` : ''}
+            </div>
+          `;
+
+          if (panelUrl) {
+            html += `
+              <div class="mt-4 pt-3 border-t border-emerald-800/60">
+                <div class="text-xs text-slate-300 mb-1.5 font-medium">آدرس ورود به پنل مدیریت:</div>
+                <div dir="ltr" class="flex items-center justify-between bg-slate-900 border border-slate-700/80 rounded-lg p-2 gap-2">
+                  <a href="${panelUrl}" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-orange-400 hover:underline truncate">
+                    ${panelUrl}
+                  </a>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <button type="button" onclick="copyToClipboard('${panelUrl}', this)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-2.5 py-1 rounded transition">
+                      کپی آدرس
+                    </button>
+                    <a href="${panelUrl}" target="_blank" rel="noopener noreferrer" class="text-xs bg-orange-500 hover:bg-orange-600 text-white px-2.5 py-1 rounded transition">
+                      ورود به پنل
+                    </a>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          output.innerHTML = html;
+        } else {
+          throw new Error(result.error || 'خطایی در استقرار رخ داد.');
+        }
+      } catch (err) {
+        output.className = 'mt-4 p-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed bg-red-950/50 border border-red-700 text-red-300';
+        output.innerText = `خطا در فرایند استقرار:\n${err.message}`;
+      } finally {
+        submitBtn.disabled = false;
+        prevBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50');
+      }
+    });
+  </script>
+</body>
+</html>
